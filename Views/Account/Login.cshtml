@@ -1,0 +1,12 @@
+@model LoginInput
+@{ ViewData["Title"] = "Вход сотрудника"; }
+
+<h1>Вход сотрудника</h1>
+<p>Служебный раздел фотоателье. Для продолжения введите пароль.</p>
+
+<form method="post" asp-controller="Account" asp-action="Login">
+    <div asp-validation-summary="All" role="alert"></div>
+    <label asp-for="Password"></label>
+    <input asp-for="Password" autocomplete="current-password" required maxlength="256" />
+    <p><button type="submit">Войти</button></p>
+</form>

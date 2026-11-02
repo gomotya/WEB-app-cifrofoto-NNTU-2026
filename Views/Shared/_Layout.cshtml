@@ -3,9 +3,9 @@
 <title>@ViewData["Title"] · Цифровое фото</title><link rel="stylesheet" href="~/css/site.css" /></head>
 <body><header><a href="/">◉ Цифровое фото</a><nav>
 @if (User.Identity?.IsAuthenticated == true) {
-<a href="/Clients">Клиенты</a><a href="/Catalog">Услуги</a><a href="/Orders">Заказы</a>
+<a href="/Staff">Рабочая страница</a>
 <form method="post" action="/Account/Logout">@Html.AntiForgeryToken()<button>Выйти</button></form>
-} else { <span>Служебный раздел — следующий этап</span> }
+} else { <a href="/Account/Login">Сотрудникам</a> }
 </nav></header><main>@RenderBody()</main>
 <footer>Дзержинск, пр. Циолковского, 21Г · Пн–пт 10:00–18:00 · +7 (908) 725-72-14</footer>
 </body></html>
