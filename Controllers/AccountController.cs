@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Cifrofoto.Coursework.Controllers;
 
@@ -22,6 +23,7 @@ public class AccountController(IConfiguration configuration, IWebHostEnvironment
     }
 
     [HttpPost]
+    [EnableRateLimiting("staff-login")]
     public async Task<IActionResult> Login(LoginInput input)
     {
         if (!ModelState.IsValid)
