@@ -1,8 +1,20 @@
 using System.Globalization;
 using System.Threading.RateLimiting;
+using Cifrofoto.Coursework.Persistence;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var dataDirectory = Path.GetFullPath(
+    builder.Configuration["DataPath"] ?? "data", builder.Environment.ContentRootPath);
+Directory.CreateDirectory(dataDirectory);
+var connectionString = new SqliteConnectionStringBuilder
+{
+    DataSource = Path.Combine(dataDirectory, "studio.db"),
+    ForeignKeys = true
+}.ToString();
+builder.Services.AddDbContext<StudioDb>(options => options.UseSqlite(connectionString));
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -39,6 +51,14 @@ builder.Services.AddRateLimiter(options =>
 });
 
 var app = builder.Build();
+if (args.Contains("--migrate"))
+{
+    using var scope = app.Services.CreateScope();
+    await scope.ServiceProvider.GetRequiredService<StudioDb>().Database.MigrateAsync();
+    Console.WriteLine("Миграции базы данных применены.");
+    return;
+}
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseRateLimiter();
